@@ -1,11 +1,8 @@
 const process = require("process");
 const util = require("util");
 
-// Examples:
-// - decodeBencode("5:hello") -> "hello"
-// - decodeBencode("10:hello12345") -> "hello12345"
+
 function decodeBencode(bencodedValue) {
-  // Check if the first character is a digit
   if(bencodedValue.startsWith("i")){
     if(!bencodedValue.endsWith("e")){
       throw new Error("Invalid encoded value.");
@@ -18,23 +15,42 @@ function decodeBencode(bencodedValue) {
       throw new Error("Invalid encoded value");
     }
     return bencodedValue.substr(firstColonIndex + 1);
-  } else {
-    throw new Error("Only strings are supported at the moment");
+  }
+  else if (bencodedValue.startsWith("l") && bencodedValue.endsWith("e")){
+    bencodedValue = bencodedValue.substring(1, bencodedValue.length -1)
+    let i=0
+    let result = []
+    while (i<bencodedValue.length)
+    {
+      const [value, endIndex] = bencodedList(bencodedValue.substring(i));
+      result.push(value)
+      i += endIndex;
+    }
+    return result;
+  }
+  else {
+    throw new Error("Only strings and integers are supported at the moment");
+  }
+}
+
+function bencodedList(bencodedString) {
+  if(bencodedString.startsWith("i")){
+    firstEIndex = bencodedString.indexOf("e");
+    return [bencodedString.substring(1, firstEIndex), firstEIndex+1];
+  }
+  else if(!isNaN(bencodedString[0])){
+    firstColonIndex = bencodedString.indexOf(":");
+    length = parseInt(bencodedString.substr(0, firstColonIndex))
+    return [bencodedString.substr(firstColonIndex+1, length), length + 1 + firstColonIndex]
   }
 }
 
 function main() {
   const command = process.argv[2];
 
-  // You can use print statements as follows for debugging, they'll be visible when running tests.
-  // console.error("Logs from your program will appear here!");
-
-  // Uncomment this block to pass the first stage
   if (command === "decode") {
     const bencodedValue = process.argv[3];
-  
-    // In JavaScript, there's no need to manually convert bytes to string for printing
-    // because JS doesn't distinguish between bytes and strings in the same way Python does.
+
     console.log(JSON.stringify(decodeBencode(bencodedValue)));
   } else {
     throw new Error(`Unknown command ${command}`);
