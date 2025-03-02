@@ -16,10 +16,16 @@ function decodeBencode(bencodedValue) {
     }
     return bencodedValue.substr(firstColonIndex + 1);
   }
-  else if (bencodedValue.startsWith("l") && bencodedValue.endsWith("e")){
+  else if (bencodedValue.startsWith("l")){
+    if(!bencodedValue.endsWith("e")){
+      throw new Error("Invalid encoded value");
+    }
     bencodedValue = bencodedValue.substring(1, bencodedValue.length -1)
     let i=0
     let result = []
+    if (bencodedValue === ""){
+      return result;
+    }
     while (i<bencodedValue.length)
     {
       const [value, endIndex] = bencodedList(bencodedValue.substring(i));
