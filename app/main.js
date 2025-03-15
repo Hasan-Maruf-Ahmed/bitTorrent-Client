@@ -28,18 +28,37 @@ function decodeBencode(bencodedValue) {
     }
     while (i<bencodedValue.length)
     {
-      const [value, endIndex] = bencodedList(bencodedValue.substring(i));
+      const [value, endIndex] = bencodedList_dic(bencodedValue.substring(i));
       result.push(value)
       i += endIndex;
     }
     return result;
   }
+  else if (bencodedValue.startsWith("d")){
+    if (!bencodedValue.endsWith("e")){
+      throw new Error("Invalid bencoded value");
+    }
+    bencodedValue = bencodedValue.substring(1, bencodedValue.length - 1);
+    let i = 0;
+    let result = {};
+    if(bencodedValue === ""){
+      return result;
+    }
+    while(i<bencodedValue.length){
+      const [value, valueEndIndex] = bencodedList_dic(bencodedValue.substring(i));
+      i += valueEndIndex;
+      const [key, keyEndIndex] = bencodedList_dic(bencodedValue.substring(i));
+      i += keyEndIndex;
+      result[key] = value;
+      return result;
+    }
+  }
   else {
-    throw new Error("Only strings and integers are supported at the moment");
+    throw new Error("Only strings, integers, lists and dictionaries are supported at the moment");
   }
 }
 
-function bencodedList(bencodedString) {
+function bencodedList_dic(bencodedString) {
   if(bencodedString.startsWith("i")){
     firstEIndex = bencodedString.indexOf("e");
     return [bencodedString.substring(1, firstEIndex), firstEIndex+1];
@@ -48,6 +67,14 @@ function bencodedList(bencodedString) {
     firstColonIndex = bencodedString.indexOf(":");
     length = parseInt(bencodedString.substr(0, firstColonIndex))
     return [bencodedString.substr(firstColonIndex+1, length), length + 1 + firstColonIndex]
+  }
+  else if (bencodedString.startsWith("l")){
+    const list = decodeBencode(bencodedString);
+    return [list, bencodedString.length];
+  }
+  else if (bencodedString.startsWith("d")) {
+    const dic = decodeBencode(bencodedString);
+    return [dic, dic.length];
   }
 }
 
