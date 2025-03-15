@@ -18,11 +18,11 @@ const testCases = [
   // Dictionaries
   { input: "d3:foo3:bar5:helloi52ee", expected: {"foo":"bar","hello":52} },
   { input: "d4:spam4:eggse", expected: { spam: "eggs" } },
-  { input: "d3:fooi42e4:spaml3:baree", expected: { foo: 42, spam: ["bar"] } },
+  { input: "d3:fooi42e4:spaml3:bar4:coloee", expected: { foo: 42, spam: ["bar", "colo"] } },
   { input: "d5:apple5:fruit5:color3:rede", expected: { apple: "fruit", color: "red" } },
 
   // Nested Structures
-  { input: "l3:catd4:colo3:rede4:agei5ee", expected: ["cat", { colo: "red", age: 5 }] },
+  { input: "l3:catd4:colo3:red3:agei5eee", expected: ["cat", { colo: "red", age: 5 }] },
 ];
 
 // Run tests
