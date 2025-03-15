@@ -57,7 +57,7 @@ function decodeBencode(bencodedValue) {
     );
   }
 }
-
+// ! fix code for decoding bencode with list and dictionaries in the middle
 function bencodedList_dic(bencodedString) {
   if (bencodedString.startsWith("i")) {
     firstEIndex = bencodedString.indexOf("e");
