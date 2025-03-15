@@ -45,13 +45,13 @@ function decodeBencode(bencodedValue) {
       return result;
     }
     while(i<bencodedValue.length){
-      const [value, valueEndIndex] = bencodedList_dic(bencodedValue.substring(i));
-      i += valueEndIndex;
       const [key, keyEndIndex] = bencodedList_dic(bencodedValue.substring(i));
       i += keyEndIndex;
+      const [value, valueEndIndex] = bencodedList_dic(bencodedValue.substring(i));
+      i += valueEndIndex;
       result[key] = value;
-      return result;
     }
+    return result;
   }
   else {
     throw new Error("Only strings, integers, lists and dictionaries are supported at the moment");
@@ -61,7 +61,7 @@ function decodeBencode(bencodedValue) {
 function bencodedList_dic(bencodedString) {
   if(bencodedString.startsWith("i")){
     firstEIndex = bencodedString.indexOf("e");
-    return [bencodedString.substring(1, firstEIndex), firstEIndex+1];
+    return [parseInt(bencodedString.substring(1, firstEIndex)), firstEIndex+1];
   }
   else if(!isNaN(bencodedString[0])){
     firstColonIndex = bencodedString.indexOf(":");
@@ -90,4 +90,8 @@ function main() {
   }
 }
 
-main();
+if(require.main === module){
+  main();
+}
+
+module.exports = { decodeBencode };
