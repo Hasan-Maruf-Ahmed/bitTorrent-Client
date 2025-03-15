@@ -23,6 +23,7 @@ const testCases = [
 
   // Nested Structures
   { input: "l3:catd4:colo3:red3:agei5eee", expected: ["cat", { colo: "red", age: 5 }] },
+  { input: "l3:catd4:colo3:red3:agei5e5:colori5ee", expected: ["cat", {"colo": "red", "age": 5}, "color", 5] },
 ];
 
 // Run tests
